@@ -29,13 +29,13 @@ async function run() {
             res.send(services);
         });
 
-        // //todo get specific service
-        // app.get('/services/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: ObjectId(id) };
-        //     const service = await serviceCollection.findOne(query);
-        //     res.send(service);
-        // });
+        //todo get specific service
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const service = await serviceCollection.findOne(query);
+            res.send(service);
+        });
 
 
     }
