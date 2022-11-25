@@ -17,10 +17,29 @@ console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
-    try{
+    try {
+        // todo get the services
+        const serviceCollection = client.db('buySellCollection').collection('services');
+
+        // todo to get all the services data
+        app.get('/services', async (req, res) => {
+            const query = {};
+            const cursor = serviceCollection.find(query);
+            const services = await cursor.toArray();
+            res.send(services);
+        });
+
+        // //todo get specific service
+        // app.get('/services/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const service = await serviceCollection.findOne(query);
+        //     res.send(service);
+        // });
+
 
     }
-    finally{
+    finally {
 
     }
 }
