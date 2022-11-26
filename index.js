@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 require('dotenv').config();
 
 // todo middleware
@@ -40,6 +40,13 @@ async function run() {
             res.send(service);
         });
 
+        // todo post related api is here
+        app.post('/orders', async(req, res) =>{
+            const order = req.body
+            console.log(order);
+            const result = await ordersCollection.insertOne(order);
+            res.send(result);
+        })
 
     }
     finally {
