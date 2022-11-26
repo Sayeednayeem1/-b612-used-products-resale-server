@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 4000;
 require('dotenv').config();
 
@@ -20,6 +20,9 @@ async function run() {
     try {
         // todo get the services
         const serviceCollection = client.db('buySellCollection').collection('services');
+
+        // todo modal collection
+        const ordersCollection = client.db('buySellCollection').collection('orders');
 
         // todo to get all the services data
         app.get('/services', async (req, res) => {
