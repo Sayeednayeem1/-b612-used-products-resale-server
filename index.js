@@ -18,10 +18,10 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try {
-        // todo get the services
+        // todo get the services data collection
         const serviceCollection = client.db('buySellCollection').collection('services');
 
-        // todo modal collection
+        // todo modal post collection
         const ordersCollection = client.db('buySellCollection').collection('orders');
 
         // todo to get all the services data
@@ -32,7 +32,7 @@ async function run() {
             res.send(services);
         });
 
-        //todo get specific service
+        //todo get specific service data
         app.get('/services/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
