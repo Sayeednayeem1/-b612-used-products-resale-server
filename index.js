@@ -98,6 +98,13 @@ async function run() {
             res.status(403).send({ accessToken: '' });
         })
 
+        //todo get all the users data
+        app.get('/users', async(req, res) =>{
+            const query = {};
+            const users = await usersCollection.find(query).toArray();
+            res.send(users);
+        });
+
         // todo get users list
         app.post('/users', async (req, res) => {
             const user = req.body;
