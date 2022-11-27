@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 require('dotenv').config();
@@ -21,7 +22,7 @@ async function run() {
         // todo get the services data collection
         const serviceCollection = client.db('buySellCollection').collection('services');
 
-        // todo modal post collection
+        // todo modal post orders collection
         const ordersCollection = client.db('buySellCollection').collection('orders');
 
         // todo usersCollection
@@ -58,12 +59,25 @@ async function run() {
             const result = await ordersCollection.insertOne(order);
             res.send(result);
         });
+
+        // TODO jwt token api
+        app.get('/jwt', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            if (user) {
+                const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '2 days' })
+                return res.send({ accessToken: 'token' });
+            }
+            res.status(403).send({ accessToken: '' });
+        })
+
         // todo get users list
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             res.send(result);
-        })
+        });
 
     }
     finally {
