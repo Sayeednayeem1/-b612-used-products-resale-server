@@ -17,6 +17,24 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clu
 console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+// todo verify jwt
+function verifyJWT(req, res, next) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).send('unauthorized access');
+    }
+    const token = authHeader.split(' ')[1];
+
+    jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
+        if (err) {
+            return res.status(403).send('forbidden access');
+        }
+        req.decoded = decoded;
+        next();
+    })
+};
+
+
 async function run() {
     try {
         // todo get the services data collection
@@ -45,8 +63,16 @@ async function run() {
         });
 
         // todo get orders data
-        app.get('/orders', async (req, res) => {
+        app.get('/orders', verifyJWT, async (req, res) => {
             const email = req.query.email;
+
+            const decodedEmail = req.decoded.email;
+
+            if (email !== decodedEmail) {
+                return res.status(403).send({ message: 'forbidden access' });
+            }
+
+
             const query = { email: email };
             const orders = await ordersCollection.find(query).toArray();
             res.send(orders);
@@ -67,7 +93,7 @@ async function run() {
             const user = await usersCollection.findOne(query);
             if (user) {
                 const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '2 days' })
-                return res.send({ accessToken: 'token' });
+                return res.send({ accessToken: token });
             }
             res.status(403).send({ accessToken: '' });
         })
