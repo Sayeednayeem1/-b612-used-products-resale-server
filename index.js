@@ -40,6 +40,14 @@ async function run() {
             res.send(service);
         });
 
+        // todo get orders data
+        app.get('/orders', async(req, res) =>{
+            const email = req.query.email;
+            const query = { email: email};
+            const orders = await ordersCollection.find(query).toArray();
+            res.send(orders);
+        })
+
         // todo post related api is here
         app.post('/orders', async(req, res) =>{
             const order = req.body
