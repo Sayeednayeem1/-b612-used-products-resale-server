@@ -24,6 +24,9 @@ async function run() {
         // todo modal post collection
         const ordersCollection = client.db('buySellCollection').collection('orders');
 
+        // todo usersCollection
+        const usersCollection = client.db('buySellCollection').collection('users');
+
         // todo to get all the services data
         app.get('/services', async (req, res) => {
             const query = {};
@@ -41,18 +44,24 @@ async function run() {
         });
 
         // todo get orders data
-        app.get('/orders', async(req, res) =>{
+        app.get('/orders', async (req, res) => {
             const email = req.query.email;
-            const query = { email: email};
+            const query = { email: email };
             const orders = await ordersCollection.find(query).toArray();
             res.send(orders);
         })
 
         // todo post related api is here
-        app.post('/orders', async(req, res) =>{
+        app.post('/orders', async (req, res) => {
             const order = req.body
             console.log(order);
             const result = await ordersCollection.insertOne(order);
+            res.send(result);
+        });
+        // todo get users list
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
             res.send(result);
         })
 
