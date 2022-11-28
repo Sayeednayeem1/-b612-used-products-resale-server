@@ -42,9 +42,10 @@ async function run() {
 
         // todo modal post orders collection
         const ordersCollection = client.db('buySellCollection').collection('orders');
-
-        // todo usersCollection
+        // todo add product collection
         const usersCollection = client.db('buySellCollection').collection('users');
+        // todo usersCollection
+        const productsCollection = client.db('buySellCollection').collection('products');
 
         // todo to get all the services data
         app.get('/services', async (req, res) => {
@@ -63,9 +64,9 @@ async function run() {
         });
 
         // todo get orders to add a product
-        app.get('/ordersSpecialty', async (req, res) =>{
-            const query ={};
-            const result  = await ordersCollection.find(query).project({categoryName: 1}).toArray();
+        app.get('/ordersSpecialty', async (req, res) => {
+            const query = {};
+            const result = await ordersCollection.find(query).project({ categoryName: 1 }).toArray();
             res.send(result);
         })
 
@@ -150,6 +151,18 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updatedDoc, options);
             res.send(result);
         });
+        // todo get the uploaded data
+        app.get('/products', async (req, res) =>{
+            const query = {};
+            const result = await productsCollection.find(query).toArray();
+            res.send(result);
+        })
+        // todo post the product collection
+        app.post('/products', async(req, res) =>{
+            const product = req.body;
+            const result = await productsCollection.insertOne(product);
+            res.send(result);
+        })
 
 
     }
