@@ -62,6 +62,14 @@ async function run() {
             res.send(service);
         });
 
+        // todo get orders to add a product
+        app.get('/ordersSpecialty', async (req, res) =>{
+            const query ={};
+            const result  = await ordersCollection.find(query).project({categoryName: 1}).toArray();
+            res.send(result);
+        })
+
+
         // todo get orders data
         app.get('/orders', verifyJWT, async (req, res) => {
             const email = req.query.email;
@@ -106,12 +114,12 @@ async function run() {
         });
 
         // todo get the data role of the user
-        app.get('/users/admin/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
+        app.get('/users/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email };
             const user = await usersCollection.findOne(query);
-            res.send({isAdmin: user?.role === 'admin'});
-        })
+            res.send({ isAdmin: user?.role === 'admin' });
+        });
 
 
         // todo get users list
