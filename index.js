@@ -156,11 +156,18 @@ async function run() {
             const query = {};
             const result = await productsCollection.find(query).toArray();
             res.send(result);
-        })
+        });
         // todo post the product collection
         app.post('/products', async(req, res) =>{
             const product = req.body;
             const result = await productsCollection.insertOne(product);
+            res.send(result);
+        });
+        // todo delete products that are uploaded by the seller
+        app.delete('/products/:id', async(req, res) =>{
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id)};
+            const result = await productsCollection.deleteOne(filter);
             res.send(result);
         })
 
